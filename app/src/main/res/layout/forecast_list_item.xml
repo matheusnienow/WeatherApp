@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:clickable="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false">
+
+        <LinearLayout
+            android:id="@+id/temp_forecast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:gravity="center|right"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false">
+
+            <TextView
+                android:id="@+id/temp_max_forecast"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="23º"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
+
+            <TextView
+                android:id="@+id/temp_min_forecast"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="23º"
+                android:textSize="16sp"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/img_cidade_forecast"
+            android:gravity="center|left"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false">
+
+            <TextView
+                android:id="@+id/dia_semana_forecast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="segunda-feira"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
+
+            <TextView
+                android:id="@+id/tempo_cidade_forecast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chuva"
+                android:textSize="12sp"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img_cidade_forecast"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:scaleType="fitXY"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
+    </RelativeLayout>
+</RelativeLayout>
