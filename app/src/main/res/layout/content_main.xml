@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activity.MainActivity"
+    tools:context=".cityListing.CitiesActivity"
     tools:showIn="@layout/activity_main"
     android:clickable="false"
     android:focusable="false"
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/cabecalho">
 
-        <com.hbsis.treinamento.matheus.nienow.weatherapp.components.MyListView
+        <com.hbsis.treinamento.matheus.nienow.weatherapp.components.FabListView
             android:id="@+id/lv_cidade"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -15,9 +15,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-/**
- * Created by matheus.nienow on 24/11/2015.
- */
 public class DailyForecastDAO {
     private static final String TAG_ERRO = "TAG_ERRO";
     public static final String PREFIXO_NOME_ARQUIVO = "daily";

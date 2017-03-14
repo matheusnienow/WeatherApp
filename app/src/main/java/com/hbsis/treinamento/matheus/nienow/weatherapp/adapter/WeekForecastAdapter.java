@@ -10,39 +10,28 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hbsis.treinamento.matheus.nienow.weatherapp.R;
-import com.hbsis.treinamento.matheus.nienow.weatherapp.model.dao.WeekForecastDAO;
 import com.hbsis.treinamento.matheus.nienow.weatherapp.model.bo.current.DailyForecast;
 import com.hbsis.treinamento.matheus.nienow.weatherapp.model.bo.forecast.WeekDaily;
 import com.hbsis.treinamento.matheus.nienow.weatherapp.model.bo.forecast.WeekForecast;
+import com.hbsis.treinamento.matheus.nienow.weatherapp.model.dao.WeekForecastDAO;
 import com.hbsis.treinamento.matheus.nienow.weatherapp.thread.WeekDownloadImageAdapter;
 import com.hbsis.treinamento.matheus.nienow.weatherapp.util.Util;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 
-/**
- * Created by matheus.nienow on 19/11/2015.
- */
 public class WeekForecastAdapter extends BaseAdapter implements Serializable {
     private Context context;
     private WeekForecast weekForecast;
-    private ViewHolder viewHolder;
-    private static ArrayList<String> fileNames;
 
-    //Construtor
     public WeekForecastAdapter(Context context) {
         this.context = context;
 
         if (weekForecast == null)
             weekForecast = new WeekForecast();
-
-        if (fileNames == null)
-            fileNames = new ArrayList<>();
     }
 
-    //ViewHolder
-    static class ViewHolder implements Serializable {
+    private static class ViewHolder implements Serializable {
         TextView dia;
         TextView tempMax;
         TextView tempMin;
@@ -50,7 +39,6 @@ public class WeekForecastAdapter extends BaseAdapter implements Serializable {
         ImageView img;
     }
 
-    //Getter's e setter's
     public Context getContext() {
         return context;
     }
@@ -61,7 +49,6 @@ public class WeekForecastAdapter extends BaseAdapter implements Serializable {
         this.weekForecast = weekForecast;
     }
 
-    //Override adapter methods
     @Override
     public int getCount() {
         if (weekForecast != null && weekForecast.getWeekDailies() != null)
@@ -81,6 +68,7 @@ public class WeekForecastAdapter extends BaseAdapter implements Serializable {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.forecast_list_item, null);
 
@@ -107,21 +95,20 @@ public class WeekForecastAdapter extends BaseAdapter implements Serializable {
 
         Date time = new java.util.Date((long) weekDaily.getDt() * 1000);
 
-        viewHolder.dia.setText(Util.getDiaSemana(time));
+        viewHolder.dia.setText(Util.getWeekDay(time));
         viewHolder.tempMax.setText((int) weekDaily.getTemp().getMax() + " º");
         viewHolder.tempMin.setText((int) weekDaily.getTemp().getMin() + " º");
-        viewHolder.tempo.setText(Util.primeiraLetraMaiuscula(weekDaily.getWeather().getDescription()));
+        viewHolder.tempo.setText(Util.makeFirstLetterUpperCase(weekDaily.getWeather().getDescription()));
 
         return convertView;
     }
 
-    //WeekForecast adapter methods
-    public WeekForecast recuperaWeekForecast(DailyForecast daily) {
+    public WeekForecast recoverWeekForecast(DailyForecast daily) {
         return WeekForecastDAO.recuperaForecast(context, daily);
     }
 
-    public WeekForecast atualizaForecast(DailyForecast daily) {
-        weekForecast = recuperaWeekForecast(daily);
+    public WeekForecast updateForecast(DailyForecast daily) {
+        weekForecast = recoverWeekForecast(daily);
         notifyDataSetChanged();
 
         return weekForecast;

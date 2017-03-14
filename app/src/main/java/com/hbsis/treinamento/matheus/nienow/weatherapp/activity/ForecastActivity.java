@@ -42,7 +42,7 @@ import java.io.InputStream;
 /**
  * Created by matheus.nienow on 20/11/2015.
  */
-public class PrevisaoActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class ForecastActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private DailyForecast dailyForecast;
     private WeekForecastAdapter adapter;
     private ProgressBar progressBar;
@@ -80,7 +80,7 @@ public class PrevisaoActivity extends AppCompatActivity implements SwipeRefreshL
         super.onResume();
         if (adapter != null) {
             adapter.setContext(this);
-            adapter.recuperaWeekForecast(dailyForecast);
+            adapter.recoverWeekForecast(dailyForecast);
         }
     }
 
@@ -91,7 +91,7 @@ public class PrevisaoActivity extends AppCompatActivity implements SwipeRefreshL
     }
 
     private void getForecast() {
-        WeekForecast forecast = adapter.atualizaForecast(dailyForecast);
+        WeekForecast forecast = adapter.updateForecast(dailyForecast);
 
         if (forecast != null) {
             WeekDaily current = forecast.getWeekDailies().get(0);
@@ -156,7 +156,7 @@ public class PrevisaoActivity extends AppCompatActivity implements SwipeRefreshL
 
         progressBar.setVisibility(View.INVISIBLE);
         nomeCidade.setText(dailyForecast.getNome());
-        tempoCidade.setText(Util.primeiraLetraMaiuscula(dailyForecast.getWeather().getDescription()));
+        tempoCidade.setText(Util.makeFirstLetterUpperCase(dailyForecast.getWeather().getDescription()));
         tempCidade.setText((int) dailyForecast.getMainDaily().getTemp() + " º");
 
         Bitmap img = WeekForecastDAO.recuperaBitmap(weekForecast, 0, this);
