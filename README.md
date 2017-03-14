@@ -1,2 +1,2 @@
 # WeatherApp
-Aplicativo desenvolvido para o estágio na HBSIS a fim de demonstrar meus conhecimentos iniciais no desenvolvimento Android.
+App developed for my internship at HBSIS (2015) to demonstrate my skills on Android Development.
