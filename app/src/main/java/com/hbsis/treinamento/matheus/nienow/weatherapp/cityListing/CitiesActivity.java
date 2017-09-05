@@ -1,5 +1,6 @@
-package com.hbsis.treinamento.matheus.nienow.weatherapp.activity;
+package com.hbsis.treinamento.matheus.nienow.weatherapp.cityListing;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,47 +17,61 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.hbsis.treinamento.matheus.nienow.weatherapp.R;
+import com.hbsis.treinamento.matheus.nienow.weatherapp.activity.RegisterActivity;
 import com.hbsis.treinamento.matheus.nienow.weatherapp.adapter.DailyAdapter;
-import com.hbsis.treinamento.matheus.nienow.weatherapp.components.MyListView;
+import com.hbsis.treinamento.matheus.nienow.weatherapp.components.FabListView;
 import com.hbsis.treinamento.matheus.nienow.weatherapp.model.bo.current.DailyForecast;
 import com.hbsis.treinamento.matheus.nienow.weatherapp.util.Util;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+import java.util.ArrayList;
+
+public class CitiesActivity extends AppCompatActivity implements MVP.CitiesView, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
     private DailyAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private MVP.CitiesPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initPresenter();
+        initComponents();
+    }
+
+    private void initPresenter() {
+        if (presenter == null)
+            presenter = new CitiesPresenterImpl(this);
+    }
+
+    private void initComponents() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
+
+        FabListView cityList = (FabListView) findViewById(R.id.lv_cidade);
+        cityList.attachFabForScroll(fab);
+        View emptyView = findViewById(R.id.empty_layout);
+        cityList.setEmptyView(emptyView);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        MyListView listCidades = (MyListView) findViewById(R.id.lv_cidade);
-        listCidades.attachFabForScroll(fab);
-
         if (adapter == null)
             adapter = new DailyAdapter(this, swipeRefreshLayout);
 
-        if (listCidades.getAdapter() == null)
-            listCidades.setAdapter(adapter);
+        if (cityList.getAdapter() == null)
+            cityList.setAdapter(adapter);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-                DailyForecast dailyForecast = (DailyForecast) data.getExtras().getSerializable(CadastroActivity.TAG_RESULT);
-                adapter.addDailyForecast(dailyForecast, null);
-                adapter.notifyDataSetChanged();
-                makeSnack(getString(R.string.cidade_cadastrada), Snackbar.LENGTH_LONG);
+                DailyForecast dailyForecast = (DailyForecast) data.getExtras().getSerializable(RegisterActivity.TAG_RESULT);
+                presenter.onCityRegistered(dailyForecast);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -67,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         if (adapter != null) {
             adapter.setContext(this);
-            adapter.recuperaForecasts();
+            presenter.recoverForecasts();
         }
     }
 
@@ -82,14 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_sort) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(getString(R.string.ordenar_listagem_por))
-                    .setItems(getResources().getStringArray(R.array.ordenar_opcoes), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            adapter.sortCities(which);
-                        }
-                    }).show();
-
+            presenter.onActionSort();
             return true;
         }
 
@@ -98,7 +106,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        startActivityForResult(new Intent(this, CadastroActivity.class), 1);
+        switch (v.getId()) {
+            case R.id.fab:
+                startActivityForResult(new Intent(this, RegisterActivity.class), 1);
+                break;
+        }
     }
 
     @Override
@@ -110,14 +122,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     swipeRefreshLayout.setRefreshing(true);
                     adapter.atualizaForecasts(swipeRefreshLayout);
                 } else {
-                    makeSnack(getString(R.string.erro_estabelecer_conexao), Snackbar.LENGTH_LONG);
+                    showSnack(getString(R.string.erro_estabelecer_conexao), Snackbar.LENGTH_LONG);
                     swipeRefreshLayout.setRefreshing(false);
                 }
             }
         }, 5000);
     }
 
-    private void makeSnack(String txt, int duration) {
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public void showSnack(String txt, int duration) {
         Snackbar.make(swipeRefreshLayout, txt, duration).show();
+    }
+
+    @Override
+    public void setForecasts(ArrayList<DailyForecast> dailyForecasts) {
+        adapter.setDailyForecasts(dailyForecasts);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void addCity(DailyForecast dailyForecast) {
+        adapter.addDailyForecast(dailyForecast, null);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showSortDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.ordenar_listagem_por))
+                .setItems(getResources().getStringArray(R.array.ordenar_opcoes), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        adapter.sortCities(which);
+                    }
+                }).show();
     }
 }

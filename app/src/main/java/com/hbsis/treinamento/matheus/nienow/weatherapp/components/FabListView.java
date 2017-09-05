@@ -6,31 +6,26 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ListView;
 
-/**
- * Created by matheus.nienow on 01/12/2015.
- */
-public class MyListView extends ListView {
+public class FabListView extends ListView {
     private float downY = 0;
     private boolean consumeTouchEvents = false;
     private FloatingActionButton fab;
 
-    //Construtores
-    public MyListView(Context context) {
+    public FabListView(Context context) {
         super(context);
     }
-    public MyListView(Context context, AttributeSet attrs) {
+    public FabListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-    public MyListView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FabListView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    //Set fab
+    //Attach floating action button to listen to list's scroll
     public void attachFabForScroll(FloatingActionButton fab) {
         this.fab = fab;
     }
 
-    //Override
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         boolean isHandled = true;
@@ -59,7 +54,6 @@ public class MyListView extends ListView {
         return isHandled;
     }
 
-    //Esconde ou mostra fab
     private void handleScroll(float distance) {
         if (distance > 0)
             fab.hide();//scroll up

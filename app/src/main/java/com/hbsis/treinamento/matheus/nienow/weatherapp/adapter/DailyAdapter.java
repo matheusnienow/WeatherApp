@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -25,7 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.hbsis.treinamento.matheus.nienow.weatherapp.R;
-import com.hbsis.treinamento.matheus.nienow.weatherapp.activity.PrevisaoActivity;
+import com.hbsis.treinamento.matheus.nienow.weatherapp.activity.ForecastActivity;
 import com.hbsis.treinamento.matheus.nienow.weatherapp.model.dao.DailyForecastDAO;
 import com.hbsis.treinamento.matheus.nienow.weatherapp.model.bo.current.DailyForecast;
 import com.hbsis.treinamento.matheus.nienow.weatherapp.parser.JSONParser;
@@ -77,6 +78,7 @@ public class DailyAdapter extends BaseAdapter implements Serializable {
         TextView tempMax;
         TextView tempo;
         ImageView img;
+        ProgressBar imgProgress;
     }
 
     //Getter's e setter's
@@ -124,6 +126,7 @@ public class DailyAdapter extends BaseAdapter implements Serializable {
             viewHolder.tempMax = (TextView) convertView.findViewById(R.id.temp_max_cidade);
             viewHolder.tempo = (TextView) convertView.findViewById(R.id.tempo_cidade);
             viewHolder.img = (ImageView) convertView.findViewById(R.id.img_cidade);
+            viewHolder.imgProgress = (ProgressBar) convertView.findViewById(R.id.progress_img);
             convertView.setTag(viewHolder);
         } else
             viewHolder = (ViewHolder) convertView.getTag();
@@ -151,19 +154,19 @@ public class DailyAdapter extends BaseAdapter implements Serializable {
             viewHolder.img.setImageBitmap(img);
         else {
             String[] url = new String[]{"http://openweathermap.org/img/w/" + dailyForecast.getWeather().getIcon() + ".png", String.valueOf(position)};
-            new DailyDownloadImageTask(viewHolder.img, context).execute(url);
+            new DailyDownloadImageTask(viewHolder.img, viewHolder.imgProgress, context).execute(url);
         }
 
         viewHolder.nome.setText(dailyForecast.getNome() + ", " + dailyForecast.getSys().getCountry());
         viewHolder.tempMin.setText((int) dailyForecast.getMainDaily().getTempMin() + " ºC");
         viewHolder.tempMax.setText((int) dailyForecast.getMainDaily().getTempMax() + " ºC");
 
-        String description = Util.primeiraLetraMaiuscula(dailyForecast.getWeather().getDescription());
+        String description = Util.makeFirstLetterUpperCase(dailyForecast.getWeather().getDescription());
         viewHolder.tempo.setText(description);
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(context, PrevisaoActivity.class);
+                Intent i = new Intent(context, ForecastActivity.class);
                 DailyForecast daily = dailyForecast;
                 BitmapDrawable bmDrawable = (BitmapDrawable) viewHolder.img.getDrawable();
                 if (bmDrawable != null)

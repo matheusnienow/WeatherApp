@@ -8,9 +8,6 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by matheus.nienow on 25/11/2015.
- */
 public class Util {
     public static boolean isOnline(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -18,11 +15,11 @@ public class Util {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    public static String primeiraLetraMaiuscula(String txt){
-        return (txt == null ? null : txt.substring(0,1).toUpperCase()+txt.substring(1));
+    public static String makeFirstLetterUpperCase(String text){
+        return (text == null ? null : text.substring(0,1).toUpperCase()+text.substring(1));
     }
 
-    public static String getDiaSemana(Date date) {
+    public static String getWeekDay(Date date) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);

@@ -1,98 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:background="@drawable/list_selector"
-    android:clickable="true">
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:paddingBottom="8dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/img_wrapper"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
-        android:clickable="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:orientation="vertical"
-            android:clickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false">
-
-            <TextView
-                android:id="@+id/temp_max_cidade"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="23º"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:clickable="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"/>
-
-            <TextView
-                android:id="@+id/temp_min_cidade"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:text="23º"
-                android:textSize="16sp"
-                android:clickable="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/img_cidade"
-            android:gravity="center|left"
-            android:layout_centerVertical="true"
-            android:orientation="vertical"
-            android:clickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false">
-
-            <TextView
-                android:id="@+id/nome_cidade"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pomerode"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:clickable="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false" />
-
-            <TextView
-                android:id="@+id/tempo_cidade"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Chuva"
-                android:textSize="12sp"
-                android:clickable="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false" />
-        </LinearLayout>
+        android:layout_marginEnd="16dp">
 
         <ImageView
             android:id="@+id/img_cidade"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:scaleType="fitXY"
+            android:layout_gravity="center"
             android:clickable="false"
             android:focusable="false"
-            android:focusableInTouchMode="false"/>
-    </RelativeLayout>
-</RelativeLayout>
+            android:focusableInTouchMode="false"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            tools:visiblity="visible" />
+
+        <ProgressBar
+            android:id="@+id/progress_img"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:padding="8dp" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center|left"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/nome_cidade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="Pomerode"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tempo_cidade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="Chuva"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:layout_gravity="center"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/temp_max_cidade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:gravity="center"
+            android:text="23º"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/temp_min_cidade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:gravity="center"
+            android:text="23º"
+            android:textSize="16sp" />
+    </LinearLayout>
+</LinearLayout>

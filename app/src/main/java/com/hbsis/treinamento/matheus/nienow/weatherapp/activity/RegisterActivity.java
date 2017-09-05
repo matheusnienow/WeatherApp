@@ -14,7 +14,6 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,11 +35,10 @@ import org.json.JSONException;
 /**
  * Created by matheus.nienow on 19/11/2015.
  */
-public class CadastroActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG_RESULT = "result";
     public static final String ERROR_NOT_FOUND_CITY = "Error: Not found city";
-    private EditText editCidade;
-    private Button btProcurar;
+    private EditText etCity;
     private ProgressDialog progress;
     private RelativeLayout layout;
 
@@ -59,16 +57,17 @@ public class CadastroActivity extends AppCompatActivity implements View.OnClickL
         }
 
         layout = (RelativeLayout) findViewById(R.id.content_cadastro);
-        editCidade = (EditText) findViewById(R.id.et_cidade);
-        btProcurar = (Button) findViewById(R.id.bt_cadastrar);
-        btProcurar.setOnClickListener(this);
+        etCity = (EditText) findViewById(R.id.et_cidade);
+        findViewById(R.id.bt_cadastrar).setOnClickListener(this);
 
         TextView help = (TextView) findViewById(R.id.descricao_help);
-        help.setText(Html.fromHtml(getString(R.string.guia_cadastro_1)+" <a href=\"https://www.iso.org/obp/ui/#search\" >ISO 3166</a>"+getString(R.string.guia_cadastro_2)));
-        help.setMovementMethod(LinkMovementMethod.getInstance());
+        if (help != null){
+            help.setText(Html.fromHtml(getString(R.string.guia_cadastro_1)+" <a href=\"https://www.iso.org/obp/ui/#search\" >ISO 3166</a>"+getString(R.string.guia_cadastro_2)));
+            help.setMovementMethod(LinkMovementMethod.getInstance());
+        }
     }
 
-    private void escondeTeclado(){
+    private void hideKeyboard(){
         if (this.getCurrentFocus() != null) {
             InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -77,26 +76,26 @@ public class CadastroActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        escondeTeclado();
-        cadastrar();
+        hideKeyboard();
+        register();
     }
 
-    private void cadastrar() {
+    private void register() {
         if (!Util.isOnline(this)) {
             Snackbar.make(layout, getString(R.string.erro_estabelecer_conexao), Snackbar.LENGTH_LONG).show();
             return;
         }
 
-        if (editCidade.getText() != null && !editCidade.getText().toString().equals("")) {
+        if (etCity.getText() != null && !etCity.getText().toString().equals("")) {
             progress = ProgressDialog.show(this, getString(R.string.cadastrando_cidade),
                     getString(R.string.buscando_informacoes), true);
-            procuraCidade();
+            searchCity();
         } else
-            editCidade.setError(getString(R.string.erro_campo_vazio));
+            etCity.setError(getString(R.string.erro_campo_vazio));
     }
 
-    private void procuraCidade() {
-        String nomeCidade = editCidade.getText().toString();
+    private void searchCity() {
+        String nomeCidade = etCity.getText().toString();
 
         final RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://api.openweathermap.org/data/2.5/weather?q=" + nomeCidade.trim().replace(" ", "") + "&appid=37663b8a1a81f6163bfd6d89919e6b51&units=metric&lang=pt";
@@ -108,7 +107,7 @@ public class CadastroActivity extends AppCompatActivity implements View.OnClickL
                         if (response != null) {
                             try {
                                 if (!response.contains(ERROR_NOT_FOUND_CITY))
-                                    cadastraCidade(JSONParser.getCidade(response));
+                                    registerCity(JSONParser.getCidade(response));
                                 else {
                                     Snackbar.make(layout, getString(R.string.cidade_nao_encontrada), Snackbar.LENGTH_SHORT).show();
                                     progress.dismiss();
@@ -132,7 +131,7 @@ public class CadastroActivity extends AppCompatActivity implements View.OnClickL
         queue.start();
     }
 
-    private void cadastraCidade(DailyForecast dailyForecast) {
+    private void registerCity(DailyForecast dailyForecast) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra(TAG_RESULT, dailyForecast);
         setResult(Activity.RESULT_OK, returnIntent);
